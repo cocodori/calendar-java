@@ -1,0 +1,4 @@
+rootProject.name = 'calendar-java'
+include 'calendar-core'
+include 'calendar-batch'
+include 'calendar-api'

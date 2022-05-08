@@ -1,5 +1,8 @@
 package com.calendar.core.domain;
 
+import com.calendar.core.domain.entity.Schedule;
+import com.calendar.core.domain.entity.ScheduleType;
+import com.calendar.core.domain.entity.User;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -10,26 +13,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class DomainCreateTest {
     @Test
     void eventCreate() {
-        User writer = new User("writer", "writer@email.com", "pw", LocalDate.now(), LocalDateTime.now());
-        User attendee = new User("attendee", "attendee@email.com", "pw", LocalDate.now(), LocalDateTime.now());
-        Event event = new Event(
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                "title",
-                "description",
-                writer,
-                LocalDateTime.now()
-        );
+        User user = new User("eme", "email", "pw", LocalDate.now());
+        final Schedule taskSchedule = Schedule.task("할 일", "청소", LocalDateTime.now(), user);
 
-        event.addEngagement(new Engagement(
-                event,
-                attendee,
-                LocalDateTime.now(),
-                RequestStatus.REQUESTED
-        ));
-
-        assertEquals(event.getEngagements().get(0).getEvent().getWriter().getName(), "writer");
-
+        assertEquals(taskSchedule.getScheduleType(), ScheduleType.TASK);
+        assertEquals(taskSchedule.toTask().getTitle(), "할 일");
     }
-
 }

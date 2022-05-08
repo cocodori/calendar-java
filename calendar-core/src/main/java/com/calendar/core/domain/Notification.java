@@ -1,16 +1,15 @@
 package com.calendar.core.domain;
 
+import com.calendar.core.domain.entity.Schedule;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
 public class Notification {
-    private Long id;
-    private LocalDateTime notifyAt;
-    private String title;
-    private User writer;
-    private LocalDateTime createdAt;
+    private Schedule schedule;
+
+    public Notification(Schedule schedule) {
+        this.schedule = schedule;
+    }
 }

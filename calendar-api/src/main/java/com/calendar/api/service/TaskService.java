@@ -22,5 +22,7 @@ public class TaskService {
                         taskCreateReq.getTaskAt(),
                         userService.findByUserId(authUser.getId())
                         );
+
+        scheduleRepository.save(taskSchedule);
     }
 }

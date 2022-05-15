@@ -2,12 +2,13 @@ package com.calendar.core.domain.entity;
 
 import com.calendar.core.domain.Event;
 import com.calendar.core.domain.RequestStatus;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
+@Builder
 @NoArgsConstructor
 @Getter
 @Table(name = "engagement")
@@ -21,11 +22,16 @@ public class Engagement extends BaseEntity {
     @ManyToOne
     private User attendee;
 
+    @Enumerated(value = EnumType.STRING)
     private RequestStatus requestStatus;
 
     public Engagement(Schedule schedule, User attendee, RequestStatus requestStatus) {
         this.schedule = schedule;
         this.attendee = attendee;
         this.requestStatus = requestStatus;
+    }
+
+    public Event getEvent() {
+        return schedule.toEvent();
     }
 }

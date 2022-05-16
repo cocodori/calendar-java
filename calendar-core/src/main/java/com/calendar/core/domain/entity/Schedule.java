@@ -3,9 +3,11 @@ package com.calendar.core.domain.entity;
 import com.calendar.core.domain.Event;
 import com.calendar.core.domain.Notification;
 import com.calendar.core.domain.Task;
+import com.calendar.core.util.Period;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -67,5 +69,10 @@ public class Schedule extends BaseEntity {
 
     public Event toEvent() {
         return new Event(this);
+    }
+
+    public Boolean isOverlapped(LocalDate date) {
+        return Period.of(getStartAt(), getEndAt()).isOverlapped(date);
+
     }
 }

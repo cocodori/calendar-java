@@ -9,6 +9,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Builder(access = AccessLevel.PRIVATE)
@@ -71,8 +72,15 @@ public class Schedule extends BaseEntity {
         return new Event(this);
     }
 
-    public Boolean isOverlapped(LocalDate date) {
-        return Period.of(getStartAt(), getEndAt()).isOverlapped(date);
+    public boolean isOverlapped(LocalDateTime startAt, LocalDateTime endAt) {
+        return this.startAt.isBefore(endAt) && startAt.isBefore(this.endAt);
+    }
 
+    public boolean isOverlapped(LocalDate date) {
+        return Period.of(this.getStartAt(), this.getEndAt()).isOverlapped(date);
+    }
+
+    public boolean isOverlapped(Period period) {
+        return Period.of(this.getStartAt(), this.getEndAt()).isOverlapped(period);
     }
 }

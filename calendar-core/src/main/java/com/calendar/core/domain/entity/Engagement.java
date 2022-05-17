@@ -2,6 +2,7 @@ package com.calendar.core.domain.entity;
 
 import com.calendar.core.domain.Event;
 import com.calendar.core.domain.RequestStatus;
+import com.calendar.core.util.Period;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,5 +39,9 @@ public class Engagement extends BaseEntity {
 
     public boolean isOverlapped(LocalDate date) {
         return this.schedule.isOverlapped(date);
+    }
+
+    public boolean isOverlapped(Period period) {
+        return this.schedule.isOverlapped(period);
     }
 }

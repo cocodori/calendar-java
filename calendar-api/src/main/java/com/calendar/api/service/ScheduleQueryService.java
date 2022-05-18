@@ -23,7 +23,6 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ScheduleQueryService {
-
     private final ScheduleRepository scheduleRepository;
     private final EngagementRepository engagementRepository;
 
@@ -31,36 +30,22 @@ public class ScheduleQueryService {
             AuthUser authUser,
             LocalDate date
     ) {
-
-        return Stream.concat(
-                scheduleRepository.findAllByWriter_Id(authUser.getId())
-                        .stream()
-                        .filter(schedule -> schedule.isOverlapped(date))
-                        .map(DtoConverter::fromSchedule),
-                engagementRepository.findAllByAttendee_Id(authUser.getId())
-                        .stream()
-                        .filter(engagement -> engagement.isOverlapped(date))
-                        .map(engagement -> DtoConverter.fromSchedule(engagement.getSchedule())))
-                .collect(Collectors.toList());
+        final Period period = Period.of(date, date);
+        return getScheduleByPeriod(authUser, period);
     }
+
 
     public List<ScheduleDto> getScheduleByWeek(AuthUser authUser, LocalDate startOfWeek) {
         final Period period = Period.of(startOfWeek, startOfWeek.plusDays(6));
-        return Stream.concat(
-                scheduleRepository.findAllByWriter_Id(authUser.getId())
-                        .stream()
-                        .filter(schedule -> schedule.isOverlapped(period))
-                        .map(DtoConverter::fromSchedule),
-                engagementRepository.findAllByAttendee_Id(authUser.getId())
-                        .stream()
-                        .filter(engagement -> engagement.isOverlapped(period))
-                        .map(engagement -> DtoConverter.fromSchedule(engagement.getSchedule())))
-                .collect(Collectors.toList());
+        return getScheduleByPeriod(authUser, period);
     }
 
     public List<ScheduleDto> getScheduleByMonth(AuthUser authUser, YearMonth yearMonth) {
         final Period period = Period.of(yearMonth.atDay(1), yearMonth.atEndOfMonth());
+        return getScheduleByPeriod(authUser, period);
+    }
 
+    private List<ScheduleDto> getScheduleByPeriod(AuthUser authUser, Period period) {
         return Stream.concat(
                 scheduleRepository.findAllByWriter_Id(authUser.getId())
                         .stream()

@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
@@ -35,7 +36,7 @@ public class ScheduleController {
 
     @PostMapping("/events")
     public ResponseEntity<Void> createEvent(
-            @RequestBody EventCreateReq eventCreateReq,
+            @RequestBody @Valid EventCreateReq eventCreateReq,
             AuthUser authUser
     ) {
         eventService.create(eventCreateReq, authUser);

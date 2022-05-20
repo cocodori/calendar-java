@@ -5,6 +5,8 @@ import com.calendar.api.dto.NotificationDto;
 import com.calendar.api.dto.ScheduleDto;
 import com.calendar.api.dto.TaskDto;
 import com.calendar.core.domain.entity.Schedule;
+import com.calendar.core.exception.CalendarException;
+import com.calendar.core.exception.ErrorCode;
 
 public abstract class DtoConverter {
     public static ScheduleDto fromSchedule(Schedule schedule) {
@@ -34,7 +36,7 @@ public abstract class DtoConverter {
                         .writerId(schedule.getWriter().getId())
                         .build();
             default:
-                throw new RuntimeException("bad request. not matched schedule type.");
+                throw new CalendarException(ErrorCode.BAD_REQUEST);
         }
     }
 }

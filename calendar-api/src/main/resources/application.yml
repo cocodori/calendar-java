@@ -10,12 +10,12 @@ spring:
         period: 0
   mail:
     host: smtp.gmail.com
-    posrt: 587
+    port: 587
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
     properties:
       mail:
-        smpt:
+        smtp:
           socketFactory.class: javax.net.ssl.SSLSocketFactory
           auth: true
           starttls:

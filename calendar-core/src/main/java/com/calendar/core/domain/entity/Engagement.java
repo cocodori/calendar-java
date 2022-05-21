@@ -1,6 +1,7 @@
 package com.calendar.core.domain.entity;
 
 import com.calendar.core.domain.Event;
+import com.calendar.core.domain.RequestReplyType;
 import com.calendar.core.domain.RequestStatus;
 import com.calendar.core.util.Period;
 import lombok.Builder;
@@ -39,5 +40,17 @@ public class Engagement extends BaseEntity {
 
     public boolean isOverlapped(Period period) {
         return this.schedule.isOverlapped(period);
+    }
+
+    public Engagement reply(RequestReplyType type) {
+        switch (type) {
+            case ACCEPT:
+                this.requestStatus = RequestStatus.ACCEPTED;
+                break;
+            case REJECT:
+                this.requestStatus = RequestStatus.REJECTED;
+                break;
+        }
+        return this;
     }
 }

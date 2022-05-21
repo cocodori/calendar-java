@@ -1,6 +1,7 @@
 package com.calendar.api.service;
 
 import com.calendar.api.dto.AuthUser;
+import com.calendar.api.dto.EngagementEmailStuff;
 import com.calendar.api.dto.EventCreateReq;
 import com.calendar.core.domain.RequestStatus;
 import com.calendar.core.domain.entity.Engagement;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -53,9 +55,12 @@ public class EventService {
         );
 
         scheduleRepository.save(eventSchedule);
-        eventCreateReq.getAttendeeIds()
-                .forEach(attendeeId -> {
-                    final User attendee = userService.findByUserId(attendeeId);
+        List<User> attendees = eventCreateReq.getAttendeeIds()
+                .stream()
+                .map(aId -> userService.findByUserId(aId))
+                .collect(Collectors.toList());
+
+        attendees.forEach(attendee -> {
                     final Engagement engagement = Engagement.builder()
                             .schedule(eventSchedule)
                             .requestStatus(RequestStatus.REQUESTED)
@@ -63,7 +68,15 @@ public class EventService {
                             .build();
 
                     engagementRepository.save(engagement);
-                    emailService.sendEngagement(engagement);
+                    emailService.sendEngagement(
+                            EngagementEmailStuff.builder()
+                            .title(engagement.getEvent().getTitle())
+                            .toEmail(engagement.getAttendee().getEmail())
+                            .engagementId(engagement.getId())
+                            .attendeeEmails(attendees.stream().map(User::getEmail).collect(Collectors.toList()))
+                            .period(engagement.getEvent().getPeriod())
+                            .build()
+                    );
                 });
     }
 }

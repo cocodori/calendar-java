@@ -1,0 +1,21 @@
+spring:
+  batch:
+    job:
+      names: ${job.name:NONE} # NONE=잡네임 없으면 아무것도 실행되지 않는 설정
+    jdbc:
+      initialize-schema: never
+  datasource:
+    url: jdbc:mysql://localhost:3306/calendar_db?useSSL=false&serverTimezone=Asia/Seoul
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: ''
+  main:
+    web-application-type: none #Web Application으로 시작되면 안 된다.
+
+logging:
+  level:
+    org:
+      springframework:
+        jdbc: TRACE
+        transaction: DEBUG
+        batch: DEBUG
